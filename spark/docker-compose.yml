@@ -1,0 +1,24 @@
+master:
+    image: mira/spark
+    ports:
+        - 49100:49100
+        - 49101:49101
+    extra_hosts:
+        - "master1.spark:0.0.0.0"
+    environment:
+        - SPARK_MASTER_PORT=49101
+        - SPARK_MASTER_IP=master1.spark
+        - SPARK_MASTER_WEBUI_PORT=49100
+    command: /opt/spark-1.5.1/sbin/start-master-foreground.sh
+worker1:
+    image: mira/spark
+    ports:
+        - 49102:49102
+        - 49103:49103
+    extra_hosts:
+        - "master1.spark:192.168.59.103"
+    environment:
+        - SPARK_WORKER_WEBUI_PORT=49102
+        - SPARK_WORKER_HOST=0.0.0.0
+        - SPARK_WORKER_PORT=49103
+    command: /opt/spark-1.5.1/sbin/start-slave-foreground.sh spark://master1.spark:49101
